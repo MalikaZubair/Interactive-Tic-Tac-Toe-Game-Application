@@ -1,0 +1,18 @@
+{
+  "pvp": {
+    "x_wins": 0,
+    "o_wins": 0,
+    "draws": 0,
+    "total_games": 0
+  },
+  "pvc": {
+    "player_wins": 3,
+    "ai_wins": 0,
+    "draws": 3,
+    "total_games": 6,
+    "easy": 3,
+    "medium": 1,
+    "hard": 2,
+    "impossible": 0
+  }
+}

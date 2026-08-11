@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 Tic-Tac-Toe Pro - Web Edition</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="stars"></div>
+    <div class="particles-container"></div>
+    
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <h1><i class="fas fa-gamepad"></i> TIC-TAC-TOE PRO</h1>
+                <p class="subtitle">Ultimate Web Edition</p>
+            </div>
+            <div class="header-controls">
+                <button id="soundToggle" class="btn-icon" title="Toggle Sound">
+                    <i class="fas fa-volume-up"></i>
+                </button>
+                <button id="themeToggle" class="btn-icon" title="Toggle Theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Game Area -->
+        <main class="game-container">
+            <!-- Left Panel - Game Info -->
+            <div class="left-panel">
+                <div class="card glass">
+                    <h2><i class="fas fa-info-circle"></i> Game Info</h2>
+                    <div class="game-info">
+                        <div class="info-item">
+                            <span class="info-label">Mode:</span>
+                            <span id="gameMode" class="info-value">Player vs Player</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Difficulty:</span>
+                            <span id="gameDifficulty" class="info-value">Medium</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Current Turn:</span>
+                            <span id="currentTurn" class="info-value turn-x">X</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Total Moves:</span>
+                            <span id="totalMoves" class="info-value">0</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Game Controls -->
+                    <div class="game-controls">
+                        <button id="newGameBtn" class="btn btn-success">
+                            <i class="fas fa-plus-circle"></i> New Game
+                        </button>
+                        <button id="restartBtn" class="btn btn-warning">
+                            <i class="fas fa-redo"></i> Restart
+                        </button>
+                        <button id="menuBtn" class="btn btn-secondary">
+                            <i class="fas fa-home"></i> Main Menu
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Player Stats -->
+                <div class="card glass stats-card">
+                    <h2><i class="fas fa-chart-line"></i> Player Stats</h2>
+                    <div class="stats-container">
+                        <div class="stat-item">
+                            <div class="stat-icon x-icon"><i class="fas fa-times"></i></div>
+                            <div class="stat-info">
+                                <div class="stat-label">Player X</div>
+                                <div class="stat-value" id="xWins">0</div>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon o-icon"><i class="far fa-circle"></i></div>
+                            <div class="stat-info">
+                                <div class="stat-label">Player O</div>
+                                <div class="stat-value" id="oWins">0</div>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon draw-icon"><i class="fas fa-handshake"></i></div>
+                            <div class="stat-info">
+                                <div class="stat-label">Draws</div>
+                                <div class="stat-value" id="draws">0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Center Panel - Game Board -->
+            <div class="center-panel">
+                <div class="game-board-container">
+                    <div class="board-header">
+                        <h2><i class="fas fa-chess-board"></i> Game Board</h2>
+                        <div class="difficulty-badge" id="difficultyBadge">
+                            <i class="fas fa-robot"></i> Medium
+                        </div>
+                    </div>
+                    
+                    <!-- Game Board -->
+                    <div class="game-board" id="gameBoard">
+                        <!-- Cells will be generated by JavaScript -->
+                    </div>
+                    
+                    <!-- Winning Line -->
+                    <div class="winning-line" id="winningLine"></div>
+                    
+                    <!-- Game Status -->
+                    <div class="game-status" id="gameStatus">
+                        <p>Player <span class="turn-x">X</span>'s turn</p>
+                    </div>
+                </div>
+
+                <!-- Settings Panel -->
+                <div class="settings-panel card glass" id="settingsPanel">
+                    <h2><i class="fas fa-cog"></i> Game Settings</h2>
+                    
+                    <!-- Game Mode Selection -->
+                    <div class="setting-group">
+                        <label><i class="fas fa-users"></i> Game Mode</label>
+                        <div class="mode-buttons">
+                            <button class="mode-btn active" data-mode="pvp">
+                                <i class="fas fa-user-friends"></i> PvP
+                            </button>
+                            <button class="mode-btn" data-mode="pvc">
+                                <i class="fas fa-robot"></i> PvC
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Difficulty Selection -->
+                    <div class="setting-group" id="difficultyGroup">
+                        <label><i class="fas fa-brain"></i> AI Difficulty</label>
+                        <div class="difficulty-buttons">
+                            <button class="difficulty-btn" data-difficulty="easy">
+                                <i class="fas fa-seedling"></i> Easy
+                            </button>
+                            <button class="difficulty-btn active" data-difficulty="medium">
+                                <i class="fas fa-bolt"></i> Medium
+                            </button>
+                            <button class="difficulty-btn" data-difficulty="hard">
+                                <i class="fas fa-fire"></i> Hard
+                            </button>
+                            <button class="difficulty-btn" data-difficulty="impossible">
+                                <i class="fas fa-skull"></i> Impossible
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Sound Settings -->
+                    <div class="setting-group">
+                        <label><i class="fas fa-volume-up"></i> Sound</label>
+                        <div class="sound-controls">
+                            <button class="sound-btn active" data-sound="on">
+                                <i class="fas fa-volume-up"></i> ON
+                            </button>
+                            <button class="sound-btn" data-sound="off">
+                                <i class="fas fa-volume-mute"></i> OFF
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Apply Button -->
+                    <button id="applySettings" class="btn btn-primary">
+                        <i class="fas fa-check"></i> Apply Settings
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Panel - Game History & Stats -->
+            <div class="right-panel">
+                <!-- Statistics -->
+                <div class="card glass">
+                    <h2><i class="fas fa-chart-bar"></i> Statistics</h2>
+                    <div class="stats-tabs">
+                        <button class="stat-tab active" data-tab="pvp">PvP Stats</button>
+                        <button class="stat-tab" data-tab="pvc">PvC Stats</button>
+                    </div>
+                    
+                    <!-- PvP Stats -->
+                    <div class="stat-content active" id="pvpStats">
+                        <div class="stat-chart">
+                            <div class="chart-bar" id="pvpXBar" style="height: 0%">
+                                <span class="chart-label">X</span>
+                            </div>
+                            <div class="chart-bar" id="pvpOBar" style="height: 0%">
+                                <span class="chart-label">O</span>
+                            </div>
+                        </div>
+                        <div class="stat-numbers">
+                            <div class="stat-number">
+                                <div class="number-label">Total Games</div>
+                                <div class="number-value" id="pvpTotal">0</div>
+                            </div>
+                            <div class="stat-number">
+                                <div class="number-label">X Wins</div>
+                                <div class="number-value" id="pvpXWins">0</div>
+                            </div>
+                            <div class="stat-number">
+                                <div class="number-label">O Wins</div>
+                                <div class="number-value" id="pvpOWins">0</div>
+                            </div>
+                            <div class="stat-number">
+                                <div class="number-label">Draws</div>
+                                <div class="number-value" id="pvpDraws">0</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- PvC Stats -->
+                    <div class="stat-content" id="pvcStats">
+                        <div class="stat-chart">
+                            <div class="chart-bar" id="pvcPlayerBar" style="height: 0%">
+                                <span class="chart-label">You</span>
+                            </div>
+                            <div class="chart-bar" id="pvcAIBar" style="height: 0%">
+                                <span class="chart-label">AI</span>
+                            </div>
+                        </div>
+                        <div class="stat-numbers">
+                            <div class="stat-number">
+                                <div class="number-label">Total Games</div>
+                                <div class="number-value" id="pvcTotal">0</div>
+                            </div>
+                            <div class="stat-number">
+                                <div class="number-label">Your Wins</div>
+                                <div class="number-value" id="pvcPlayerWins">0</div>
+                            </div>
+                            <div class="stat-number">
+                                <div class="number-label">AI Wins</div>
+                                <div class="number-value" id="pvcAIWins">0</div>
+                            </div>
+                            <div class="stat-number">
+                                <div class="number-label">Draws</div>
+                                <div class="number-value" id="pvcDraws">0</div>
+                            </div>
+                        </div>
+                        <div class="difficulty-stats">
+                            <h4><i class="fas fa-layer-group"></i> By Difficulty</h4>
+                            <div class="difficulty-chips">
+                                <span class="difficulty-chip easy" id="easyGames">0</span>
+                                <span class="difficulty-chip medium" id="mediumGames">0</span>
+                                <span class="difficulty-chip hard" id="hardGames">0</span>
+                                <span class="difficulty-chip impossible" id="impossibleGames">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button id="resetStats" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Reset Statistics
+                    </button>
+                </div>
+
+                <!-- Move History -->
+                <div class="card glass">
+                    <h2><i class="fas fa-history"></i> Move History</h2>
+                    <div class="move-history" id="moveHistory">
+                        <p class="empty-history">No moves yet</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Game Over Modal -->
+        <div class="modal-overlay" id="gameOverModal">
+            <div class="modal card glass">
+                <div class="modal-header">
+                    <h2><i class="fas fa-trophy"></i> Game Over!</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="result-icon" id="resultIcon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3 id="resultText">Player X Wins!</h3>
+                    <p id="resultMessage">Congratulations on an amazing victory!</p>
+                    
+                    <div class="modal-buttons">
+                        <button id="playAgainBtn" class="btn btn-success">
+                            <i class="fas fa-redo"></i> Play Again
+                        </button>
+                        <button id="mainMenuBtn" class="btn btn-primary">
+                            <i class="fas fa-home"></i> Main Menu
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Tic-Tac-Toe Pro Web Edition © 2024 | Made with <i class="fas fa-heart"></i> by AI Assistant</p>
+            <div class="footer-links">
+                <a href="#"><i class="fab fa-github"></i> GitHub</a>
+                <a href="#"><i class="fas fa-question-circle"></i> Help</a>
+                <a href="#"><i class="fas fa-envelope"></i> Contact</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Confetti Effect Container -->
+    <canvas id="confettiCanvas"></canvas>
+
+    <!-- Sound Effects -->
+    <audio id="moveSound" src="https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3" preload="auto"></audio>
+    <audio id="winSound" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3" preload="auto"></audio>
+    <audio id="loseSound" src="https://assets.mixkit.co/sfx/preview/mixkit-retro-game-emergency-alarm-1000.mp3" preload="auto"></audio>
+    <audio id="drawSound" src="https://assets.mixkit.co/sfx/preview/mixkit-game-show-wrong-answer-buzz-950.mp3" preload="auto"></audio>
+    <audio id="clickSound" src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3" preload="auto"></audio>
+    <audio id="hoverSound" src="https://assets.mixkit.co/sfx/preview/mixkit-plastic-bubble-click-1124.mp3" preload="auto"></audio>
+
+    <script src="{{ url_for('static', filename='js/game.js') }}"></script>
+</body>
+</html>
